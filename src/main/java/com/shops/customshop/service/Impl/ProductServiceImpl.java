@@ -1,6 +1,7 @@
 package com.shops.customshop.service.Impl;
 
 import com.shops.customshop.exceptions.ProductNotFoundException;
+import com.shops.customshop.exceptions.ResourceNotFoundException;
 import com.shops.customshop.model.Category;
 import com.shops.customshop.model.Product;
 import com.shops.customshop.repository.CategoryRepository;
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override

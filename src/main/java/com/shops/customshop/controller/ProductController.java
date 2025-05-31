@@ -1,6 +1,5 @@
 package com.shops.customshop.controller;
 
-import com.shops.customshop.exceptions.ResourceNotFoundException;
 import com.shops.customshop.model.Product;
 import com.shops.customshop.request.AddProductRequest;
 import com.shops.customshop.request.ProductUpdateRequest;
@@ -33,8 +32,8 @@ public class ProductController {
         try {
             Product product = productService.getProductById(productId);
             return ResponseEntity.ok(new ApiResponse("success", product));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("error", null));
         }
     }
 
@@ -44,7 +43,7 @@ public class ProductController {
             Product theProduct = productService.addProduct(product);
             return ResponseEntity.ok(new ApiResponse("Add product SUCCESS", theProduct));
         } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", null));
         }
     }
 
@@ -54,8 +53,8 @@ public class ProductController {
         try {
             Product theProduct = productService.updateProduct(request, productId);
             return ResponseEntity.ok(new ApiResponse("Update product SUCCESS", theProduct));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("error", null));
         }
     }
 
@@ -64,8 +63,8 @@ public class ProductController {
         try {
             productService.deleteProductById(productId);
             return ResponseEntity.ok(new ApiResponse("Delete product SUCCESS", productId));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("error", null));
 
         }
     }
@@ -121,7 +120,7 @@ public class ProductController {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found!", null));
             }
             return ResponseEntity.ok(new ApiResponse("SUCCESS", products));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -134,7 +133,19 @@ public class ProductController {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found!", null));
             }
             return ResponseEntity.ok(new ApiResponse("SUCCESS", products));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+
+    @GetMapping("/product/count/by-brand/and-name")
+    public ResponseEntity<ApiResponse> countProductsByBrandAndName(@RequestParam String brand,
+                                                                   @RequestParam String name) {
+        try {
+            Long productCount = productService.countProductsByBrandAndName(brand, name);
+            return ResponseEntity.ok(new ApiResponse("Product count SUCCESS", productCount));
+        } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
